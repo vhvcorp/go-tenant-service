@@ -92,9 +92,9 @@ func (r *TenantRepository) FindByName(ctx context.Context, name string) (*domain
 }
 
 // FindByDomain finds a tenant by domain
-func (r *TenantRepository) FindByDomain(ctx context.Context, domain string) (*domain.Tenant, error) {
+func (r *TenantRepository) FindByDomain(ctx context.Context, domainName string) (*domain.Tenant, error) {
 	var tenant domain.Tenant
-	err := r.collection.FindOne(ctx, bson.M{"domain": domain}).Decode(&tenant)
+	err := r.collection.FindOne(ctx, bson.M{"domain": domainName}).Decode(&tenant)
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
 			return nil, nil
