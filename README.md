@@ -1,4 +1,4 @@
-# saas-tenant-service
+# go-tenant-service
 
 > Part of the SaaS Framework - Extracted from monorepo
 
@@ -23,8 +23,8 @@
 
 ```bash
 # Clone the repository
-git clone https://github.com/longvhv/saas-tenant-service.git
-cd saas-tenant-service
+git clone https://github.com/vhvcorp/go-tenant-service.git
+cd go-tenant-service
 
 # Install dependencies
 go mod download
@@ -98,8 +98,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines.
 
 ## Related Repositories
 
-- [saas-shared-go](https://github.com/longvhv/saas-shared-go) - Shared Go libraries
-- [saas-framework-go](https://github.com/longvhv/saas-framework-go) - Original monorepo
+- [go-shared](https://github.com/vhvcorp/go-shared) - Shared Go libraries
 
 ## License
 
@@ -107,6 +106,6 @@ MIT License - see [LICENSE](LICENSE) for details
 
 ## Support
 
-- Documentation: [Wiki](https://github.com/longvhv/saas-tenant-service/wiki)
-- Issues: [GitHub Issues](https://github.com/longvhv/saas-tenant-service/issues)
-- Discussions: [GitHub Discussions](https://github.com/longvhv/saas-tenant-service/discussions)
+- Documentation: [Wiki](https://github.com/vhvcorp/go-tenant-service/wiki)
+- Issues: [GitHub Issues](https://github.com/vhvcorp/go-tenant-service/issues)
+- Discussions: [GitHub Discussions](https://github.com/vhvcorp/go-tenant-service/discussions)

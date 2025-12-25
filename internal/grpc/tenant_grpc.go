@@ -1,9 +1,9 @@
 package grpc
 
 import (
-	"github.com/longvhv/saas-shared-go/logger"
-	"github.com/longvhv/saas-framework-go/services/tenant-service/internal/service"
-	// pb "github.com/longvhv/saas-framework-go/services/tenant-service/proto"
+	"github.com/vhvcorp/go-shared/logger"
+	"github.com/vhvcorp/go-tenant-service/internal/service"
+	// pb "github.com/vhvcorp/go-tenant-service/proto"
 )
 
 // TenantServiceServer implements the gRPC tenant service

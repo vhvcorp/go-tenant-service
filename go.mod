@@ -1,24 +1,4 @@
-
-// ============================================================================
-// MIGRATION NOTE: Multi-Repo Extraction
-// ============================================================================
-// When extracting this service to a separate repository:
-// 1. Update module path to: github.com/longvhv/saas-tenant-service
-// 2. Replace local pkg dependency with: github.com/longvhv/saas-shared-go v0.1.0
-// 3. Remove all replace directives pointing to ../pkg
-// 4. Run: go mod tidy
-// 
-// Example transformation:
-//   Before: module github.com/longvhv/saas-tenant-service
-//   After:  module github.com/longvhv/saas-tenant-service
-//
-//   Before: replace github.com/longvhv/saas-framework-go/pkg => ../../pkg
-//   After:  (remove replace directive)
-//           require github.com/longvhv/saas-shared-go v0.1.0
-//
-// See: docs/migration/services/tenant-service/EXTRACTION_GUIDE.md
-// ============================================================================
-module github.com/longvhv/saas-tenant-service
+module github.com/vhvcorp/go-tenant-service
 
 go 1.24.0
 
@@ -26,7 +6,7 @@ toolchain go1.24.11
 
 require (
 	github.com/gin-gonic/gin v1.10.0
-	github.com/longvhv/saas-framework-go/pkg v0.0.0
+	github.com/vhvcorp/go-shared v0.0.0-20250101000000-000000000000 // Placeholder version - run 'go get github.com/vhvcorp/go-shared@latest && go mod tidy' once repository is accessible
 	go.mongodb.org/mongo-driver v1.17.3
 	go.uber.org/zap v1.27.0
 	google.golang.org/grpc v1.69.2

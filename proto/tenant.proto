@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package tenant;
 
-option go_package = "github.com/longvhv/saas-framework-go/services/tenant-service/proto";
+option go_package = "github.com/vhvcorp/go-tenant-service/proto";
 
 // TenantService provides tenant management functionality
 service TenantService {
