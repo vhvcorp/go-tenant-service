@@ -1,18 +1,18 @@
 # Tenant Service Dependencies
 
-## Shared Packages (from saas-shared-go)
+## Shared Packages (from go-shared)
 
 ```go
 require (
-    github.com/longvhv/saas-shared-go/config
-    github.com/longvhv/saas-shared-go/logger
-    github.com/longvhv/saas-shared-go/mongodb
-    github.com/longvhv/saas-shared-go/redis
-    github.com/longvhv/saas-shared-go/errors
-    github.com/longvhv/saas-shared-go/middleware
-    github.com/longvhv/saas-shared-go/response
-    github.com/longvhv/saas-shared-go/validation
-    github.com/longvhv/saas-shared-go/tenant
+    github.com/vhvcorp/go-shared/config
+    github.com/vhvcorp/go-shared/logger
+    github.com/vhvcorp/go-shared/mongodb
+    github.com/vhvcorp/go-shared/redis
+    github.com/vhvcorp/go-shared/errors
+    github.com/vhvcorp/go-shared/middleware
+    github.com/vhvcorp/go-shared/response
+    github.com/vhvcorp/go-shared/validation
+    github.com/vhvcorp/go-shared/tenant
 )
 ```
 
