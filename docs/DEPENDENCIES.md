@@ -4,15 +4,15 @@
 
 ```go
 require (
-    github.com/vhvcorp/go-shared/config
-    github.com/vhvcorp/go-shared/logger
-    github.com/vhvcorp/go-shared/mongodb
-    github.com/vhvcorp/go-shared/redis
-    github.com/vhvcorp/go-shared/errors
-    github.com/vhvcorp/go-shared/middleware
-    github.com/vhvcorp/go-shared/response
-    github.com/vhvcorp/go-shared/validation
-    github.com/vhvcorp/go-shared/tenant
+    github.com/vhvplatform/go-shared/config
+    github.com/vhvplatform/go-shared/logger
+    github.com/vhvplatform/go-shared/mongodb
+    github.com/vhvplatform/go-shared/redis
+    github.com/vhvplatform/go-shared/errors
+    github.com/vhvplatform/go-shared/middleware
+    github.com/vhvplatform/go-shared/response
+    github.com/vhvplatform/go-shared/validation
+    github.com/vhvplatform/go-shared/tenant
 )
 ```
 

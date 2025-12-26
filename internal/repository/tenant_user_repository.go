@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/vhvcorp/go-tenant-service/internal/domain"
+	"github.com/vhvplatform/go-tenant-service/internal/domain"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -20,11 +20,11 @@ type TenantUserRepository struct {
 // NewTenantUserRepository creates a new tenant-user repository
 func NewTenantUserRepository(db *mongo.Database) *TenantUserRepository {
 	collection := db.Collection("tenant_users")
-	
+
 	// Create indexes
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-	
+
 	indexes := []mongo.IndexModel{
 		{
 			Keys: bson.D{
@@ -40,9 +40,9 @@ func NewTenantUserRepository(db *mongo.Database) *TenantUserRepository {
 			Keys: bson.D{{Key: "user_id", Value: 1}},
 		},
 	}
-	
+
 	_, _ = collection.Indexes().CreateMany(ctx, indexes)
-	
+
 	return &TenantUserRepository{collection: collection}
 }
 
@@ -51,12 +51,12 @@ func (r *TenantUserRepository) AddUser(ctx context.Context, tenantUser *domain.T
 	tenantUser.CreatedAt = time.Now()
 	tenantUser.UpdatedAt = time.Now()
 	tenantUser.IsActive = true
-	
+
 	result, err := r.collection.InsertOne(ctx, tenantUser)
 	if err != nil {
 		return fmt.Errorf("failed to add user to tenant: %w", err)
 	}
-	
+
 	tenantUser.ID = result.InsertedID.(primitive.ObjectID)
 	return nil
 }
@@ -109,12 +109,12 @@ func (r *TenantUserRepository) ListUsersByTenant(ctx context.Context, tenantID s
 		return nil, fmt.Errorf("failed to list tenant users: %w", err)
 	}
 	defer cursor.Close(ctx)
-	
+
 	var tenantUsers []*domain.TenantUser
 	if err := cursor.All(ctx, &tenantUsers); err != nil {
 		return nil, fmt.Errorf("failed to decode tenant users: %w", err)
 	}
-	
+
 	return tenantUsers, nil
 }
 
@@ -128,11 +128,11 @@ func (r *TenantUserRepository) ListTenantsByUser(ctx context.Context, userID str
 		return nil, fmt.Errorf("failed to list user tenants: %w", err)
 	}
 	defer cursor.Close(ctx)
-	
+
 	var tenantUsers []*domain.TenantUser
 	if err := cursor.All(ctx, &tenantUsers); err != nil {
 		return nil, fmt.Errorf("failed to decode user tenants: %w", err)
 	}
-	
+
 	return tenantUsers, nil
 }

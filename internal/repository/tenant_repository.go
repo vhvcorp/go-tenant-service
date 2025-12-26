@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/vhvcorp/go-tenant-service/internal/domain"
+	"github.com/vhvplatform/go-tenant-service/internal/domain"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -20,11 +20,11 @@ type TenantRepository struct {
 // NewTenantRepository creates a new tenant repository
 func NewTenantRepository(db *mongo.Database) *TenantRepository {
 	collection := db.Collection("tenants")
-	
+
 	// Create indexes
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-	
+
 	indexes := []mongo.IndexModel{
 		{
 			Keys:    bson.D{{Key: "name", Value: 1}},
@@ -35,9 +35,9 @@ func NewTenantRepository(db *mongo.Database) *TenantRepository {
 			Options: options.Index().SetUnique(true).SetSparse(true),
 		},
 	}
-	
+
 	_, _ = collection.Indexes().CreateMany(ctx, indexes)
-	
+
 	return &TenantRepository{collection: collection}
 }
 
@@ -46,16 +46,16 @@ func (r *TenantRepository) Create(ctx context.Context, tenant *domain.Tenant) er
 	tenant.CreatedAt = time.Now()
 	tenant.UpdatedAt = time.Now()
 	tenant.IsActive = true
-	
+
 	if tenant.SubscriptionTier == "" {
 		tenant.SubscriptionTier = domain.SubscriptionFree
 	}
-	
+
 	result, err := r.collection.InsertOne(ctx, tenant)
 	if err != nil {
 		return fmt.Errorf("failed to create tenant: %w", err)
 	}
-	
+
 	tenant.ID = result.InsertedID.(primitive.ObjectID)
 	return nil
 }
@@ -66,7 +66,7 @@ func (r *TenantRepository) FindByID(ctx context.Context, id string) (*domain.Ten
 	if err != nil {
 		return nil, fmt.Errorf("invalid tenant ID: %w", err)
 	}
-	
+
 	var tenant domain.Tenant
 	err = r.collection.FindOne(ctx, bson.M{"_id": objectID}).Decode(&tenant)
 	if err != nil {
@@ -112,39 +112,39 @@ func (r *TenantRepository) List(ctx context.Context, page, pageSize int) ([]*dom
 	if pageSize < 1 || pageSize > 100 {
 		pageSize = 20
 	}
-	
+
 	skip := (page - 1) * pageSize
-	
+
 	// Get total count
 	total, err := r.collection.CountDocuments(ctx, bson.M{})
 	if err != nil {
 		return nil, 0, fmt.Errorf("failed to count tenants: %w", err)
 	}
-	
+
 	// Get tenants
 	opts := options.Find().
 		SetSkip(int64(skip)).
 		SetLimit(int64(pageSize)).
 		SetSort(bson.D{{Key: "created_at", Value: -1}})
-	
+
 	cursor, err := r.collection.Find(ctx, bson.M{}, opts)
 	if err != nil {
 		return nil, 0, fmt.Errorf("failed to list tenants: %w", err)
 	}
 	defer cursor.Close(ctx)
-	
+
 	var tenants []*domain.Tenant
 	if err := cursor.All(ctx, &tenants); err != nil {
 		return nil, 0, fmt.Errorf("failed to decode tenants: %w", err)
 	}
-	
+
 	return tenants, total, nil
 }
 
 // Update updates a tenant
 func (r *TenantRepository) Update(ctx context.Context, tenant *domain.Tenant) error {
 	tenant.UpdatedAt = time.Now()
-	
+
 	_, err := r.collection.UpdateOne(
 		ctx,
 		bson.M{"_id": tenant.ID},
@@ -162,7 +162,7 @@ func (r *TenantRepository) Delete(ctx context.Context, id string) error {
 	if err != nil {
 		return fmt.Errorf("invalid tenant ID: %w", err)
 	}
-	
+
 	_, err = r.collection.UpdateOne(
 		ctx,
 		bson.M{"_id": objectID},

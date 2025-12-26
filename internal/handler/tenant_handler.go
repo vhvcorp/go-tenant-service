@@ -5,10 +5,10 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"github.com/vhvcorp/go-shared/errors"
-	"github.com/vhvcorp/go-shared/logger"
-	"github.com/vhvcorp/go-tenant-service/internal/domain"
-	"github.com/vhvcorp/go-tenant-service/internal/service"
+	"github.com/vhvplatform/go-shared/errors"
+	"github.com/vhvplatform/go-shared/logger"
+	"github.com/vhvplatform/go-tenant-service/internal/domain"
+	"github.com/vhvplatform/go-tenant-service/internal/service"
 	"go.uber.org/zap"
 )
 
@@ -33,26 +33,26 @@ func (h *TenantHandler) CreateTenant(c *gin.Context) {
 		h.respondError(c, errors.BadRequest("Invalid request body"))
 		return
 	}
-	
+
 	tenant, err := h.tenantService.CreateTenant(c.Request.Context(), &req)
 	if err != nil {
 		h.respondError(c, err)
 		return
 	}
-	
+
 	c.JSON(http.StatusCreated, gin.H{"data": h.toTenantResponse(tenant)})
 }
 
 // GetTenant handles getting a tenant by ID
 func (h *TenantHandler) GetTenant(c *gin.Context) {
 	tenantID := c.Param("id")
-	
+
 	tenant, err := h.tenantService.GetTenant(c.Request.Context(), tenantID)
 	if err != nil {
 		h.respondError(c, err)
 		return
 	}
-	
+
 	c.JSON(http.StatusOK, gin.H{"data": h.toTenantResponse(tenant)})
 }
 
@@ -60,18 +60,18 @@ func (h *TenantHandler) GetTenant(c *gin.Context) {
 func (h *TenantHandler) ListTenants(c *gin.Context) {
 	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
 	pageSize, _ := strconv.Atoi(c.DefaultQuery("page_size", "20"))
-	
+
 	tenants, total, err := h.tenantService.ListTenants(c.Request.Context(), page, pageSize)
 	if err != nil {
 		h.respondError(c, err)
 		return
 	}
-	
+
 	tenantResponses := make([]domain.TenantResponse, len(tenants))
 	for i, tenant := range tenants {
 		tenantResponses[i] = h.toTenantResponse(tenant)
 	}
-	
+
 	c.JSON(http.StatusOK, gin.H{
 		"data": domain.ListTenantsResponse{
 			Tenants:  tenantResponses,
@@ -85,49 +85,49 @@ func (h *TenantHandler) ListTenants(c *gin.Context) {
 // UpdateTenant handles updating a tenant
 func (h *TenantHandler) UpdateTenant(c *gin.Context) {
 	tenantID := c.Param("id")
-	
+
 	var req domain.UpdateTenantRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		h.respondError(c, errors.BadRequest("Invalid request body"))
 		return
 	}
-	
+
 	tenant, err := h.tenantService.UpdateTenant(c.Request.Context(), tenantID, &req)
 	if err != nil {
 		h.respondError(c, err)
 		return
 	}
-	
+
 	c.JSON(http.StatusOK, gin.H{"data": h.toTenantResponse(tenant)})
 }
 
 // DeleteTenant handles deleting a tenant
 func (h *TenantHandler) DeleteTenant(c *gin.Context) {
 	tenantID := c.Param("id")
-	
+
 	if err := h.tenantService.DeleteTenant(c.Request.Context(), tenantID); err != nil {
 		h.respondError(c, err)
 		return
 	}
-	
+
 	c.JSON(http.StatusOK, gin.H{"message": "Tenant deleted successfully"})
 }
 
 // AddUserToTenant handles adding a user to a tenant
 func (h *TenantHandler) AddUserToTenant(c *gin.Context) {
 	tenantID := c.Param("id")
-	
+
 	var req domain.AddUserRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		h.respondError(c, errors.BadRequest("Invalid request body"))
 		return
 	}
-	
+
 	if err := h.tenantService.AddUserToTenant(c.Request.Context(), tenantID, req.UserID, req.Role); err != nil {
 		h.respondError(c, err)
 		return
 	}
-	
+
 	c.JSON(http.StatusOK, gin.H{"message": "User added to tenant successfully"})
 }
 
@@ -135,12 +135,12 @@ func (h *TenantHandler) AddUserToTenant(c *gin.Context) {
 func (h *TenantHandler) RemoveUserFromTenant(c *gin.Context) {
 	tenantID := c.Param("id")
 	userID := c.Param("user_id")
-	
+
 	if err := h.tenantService.RemoveUserFromTenant(c.Request.Context(), tenantID, userID); err != nil {
 		h.respondError(c, err)
 		return
 	}
-	
+
 	c.JSON(http.StatusOK, gin.H{"message": "User removed from tenant successfully"})
 }
 
@@ -161,7 +161,7 @@ func (h *TenantHandler) toTenantResponse(tenant *domain.Tenant) domain.TenantRes
 // respondError responds with an error
 func (h *TenantHandler) respondError(c *gin.Context, err error) {
 	appErr := errors.FromError(err)
-	h.logger.Error("Request failed", 
+	h.logger.Error("Request failed",
 		zap.String("path", c.Request.URL.Path),
 		zap.String("method", c.Request.Method),
 		zap.String("error", appErr.Message),

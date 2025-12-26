@@ -23,7 +23,7 @@
 
 ```bash
 # Clone the repository
-git clone https://github.com/vhvcorp/go-tenant-service.git
+git clone https://github.com/vhvplatform/go-tenant-service.git
 cd go-tenant-service
 
 # Install dependencies
@@ -98,7 +98,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines.
 
 ## Related Repositories
 
-- [go-shared](https://github.com/vhvcorp/go-shared) - Shared Go libraries
+- [go-shared](https://github.com/vhvplatform/go-shared) - Shared Go libraries
 
 ## License
 
@@ -106,6 +106,6 @@ MIT License - see [LICENSE](LICENSE) for details
 
 ## Support
 
-- Documentation: [Wiki](https://github.com/vhvcorp/go-tenant-service/wiki)
-- Issues: [GitHub Issues](https://github.com/vhvcorp/go-tenant-service/issues)
-- Discussions: [GitHub Discussions](https://github.com/vhvcorp/go-tenant-service/discussions)
+- Documentation: [Wiki](https://github.com/vhvplatform/go-tenant-service/wiki)
+- Issues: [GitHub Issues](https://github.com/vhvplatform/go-tenant-service/issues)
+- Discussions: [GitHub Discussions](https://github.com/vhvplatform/go-tenant-service/discussions)

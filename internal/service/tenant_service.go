@@ -3,10 +3,10 @@ package service
 import (
 	"context"
 
-	"github.com/vhvcorp/go-shared/errors"
-	"github.com/vhvcorp/go-shared/logger"
-	"github.com/vhvcorp/go-tenant-service/internal/domain"
-	"github.com/vhvcorp/go-tenant-service/internal/repository"
+	"github.com/vhvplatform/go-shared/errors"
+	"github.com/vhvplatform/go-shared/logger"
+	"github.com/vhvplatform/go-tenant-service/internal/domain"
+	"github.com/vhvplatform/go-tenant-service/internal/repository"
 	"go.uber.org/zap"
 )
 
@@ -41,7 +41,7 @@ func (s *TenantService) CreateTenant(ctx context.Context, req *domain.CreateTena
 	if existingTenant != nil {
 		return nil, errors.Conflict("Tenant already exists with this name")
 	}
-	
+
 	// Check domain if provided
 	if req.Domain != "" {
 		existingDomain, err := s.tenantRepo.FindByDomain(ctx, req.Domain)
@@ -53,24 +53,24 @@ func (s *TenantService) CreateTenant(ctx context.Context, req *domain.CreateTena
 			return nil, errors.Conflict("Tenant already exists with this domain")
 		}
 	}
-	
+
 	// Create tenant
 	tenant := &domain.Tenant{
 		Name:             req.Name,
 		Domain:           req.Domain,
 		SubscriptionTier: req.SubscriptionTier,
 	}
-	
+
 	if err := s.tenantRepo.Create(ctx, tenant); err != nil {
 		s.logger.Error("Failed to create tenant", zap.Error(err))
 		return nil, errors.Internal("Failed to create tenant")
 	}
-	
-	s.logger.Info("Tenant created successfully", 
+
+	s.logger.Info("Tenant created successfully",
 		zap.String("tenant_id", tenant.ID.Hex()),
 		zap.String("name", tenant.Name),
 	)
-	
+
 	return tenant, nil
 }
 
@@ -108,7 +108,7 @@ func (s *TenantService) UpdateTenant(ctx context.Context, id string, req *domain
 	if tenant == nil {
 		return nil, errors.NotFound("Tenant not found")
 	}
-	
+
 	// Update fields
 	if req.Name != "" {
 		tenant.Name = req.Name
@@ -119,16 +119,16 @@ func (s *TenantService) UpdateTenant(ctx context.Context, id string, req *domain
 	if req.SubscriptionTier != "" {
 		tenant.SubscriptionTier = req.SubscriptionTier
 	}
-	
+
 	if err := s.tenantRepo.Update(ctx, tenant); err != nil {
 		s.logger.Error("Failed to update tenant", zap.Error(err))
 		return nil, errors.Internal("Failed to update tenant")
 	}
-	
-	s.logger.Info("Tenant updated successfully", 
+
+	s.logger.Info("Tenant updated successfully",
 		zap.String("tenant_id", tenant.ID.Hex()),
 	)
-	
+
 	return tenant, nil
 }
 
@@ -143,16 +143,16 @@ func (s *TenantService) DeleteTenant(ctx context.Context, id string) error {
 	if tenant == nil {
 		return errors.NotFound("Tenant not found")
 	}
-	
+
 	if err := s.tenantRepo.Delete(ctx, id); err != nil {
 		s.logger.Error("Failed to delete tenant", zap.Error(err))
 		return errors.Internal("Failed to delete tenant")
 	}
-	
-	s.logger.Info("Tenant deleted successfully", 
+
+	s.logger.Info("Tenant deleted successfully",
 		zap.String("tenant_id", id),
 	)
-	
+
 	return nil
 }
 
@@ -167,7 +167,7 @@ func (s *TenantService) AddUserToTenant(ctx context.Context, tenantID, userID, r
 	if tenant == nil {
 		return errors.NotFound("Tenant not found")
 	}
-	
+
 	// Check if relationship already exists
 	existing, err := s.tenantUserRepo.FindByTenantAndUser(ctx, tenantID, userID)
 	if err != nil {
@@ -177,24 +177,24 @@ func (s *TenantService) AddUserToTenant(ctx context.Context, tenantID, userID, r
 	if existing != nil {
 		return errors.Conflict("User already belongs to this tenant")
 	}
-	
+
 	// Add user to tenant
 	tenantUser := &domain.TenantUser{
 		TenantID: tenantID,
 		UserID:   userID,
 		Role:     role,
 	}
-	
+
 	if err := s.tenantUserRepo.AddUser(ctx, tenantUser); err != nil {
 		s.logger.Error("Failed to add user to tenant", zap.Error(err))
 		return errors.Internal("Failed to add user to tenant")
 	}
-	
-	s.logger.Info("User added to tenant successfully", 
+
+	s.logger.Info("User added to tenant successfully",
 		zap.String("tenant_id", tenantID),
 		zap.String("user_id", userID),
 	)
-	
+
 	return nil
 }
 
@@ -209,16 +209,16 @@ func (s *TenantService) RemoveUserFromTenant(ctx context.Context, tenantID, user
 	if existing == nil {
 		return errors.NotFound("User not found in tenant")
 	}
-	
+
 	if err := s.tenantUserRepo.RemoveUser(ctx, tenantID, userID); err != nil {
 		s.logger.Error("Failed to remove user from tenant", zap.Error(err))
 		return errors.Internal("Failed to remove user from tenant")
 	}
-	
-	s.logger.Info("User removed from tenant successfully", 
+
+	s.logger.Info("User removed from tenant successfully",
 		zap.String("tenant_id", tenantID),
 		zap.String("user_id", userID),
 	)
-	
+
 	return nil
 }

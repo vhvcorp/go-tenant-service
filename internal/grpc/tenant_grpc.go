@@ -1,9 +1,9 @@
 package grpc
 
 import (
-	"github.com/vhvcorp/go-shared/logger"
-	"github.com/vhvcorp/go-tenant-service/internal/service"
-	// pb "github.com/vhvcorp/go-tenant-service/proto"
+	"github.com/vhvplatform/go-shared/logger"
+	"github.com/vhvplatform/go-tenant-service/internal/service"
+	// pb "github.com/vhvplatform/go-tenant-service/proto"
 )
 
 // TenantServiceServer implements the gRPC tenant service
@@ -32,7 +32,7 @@ func (s *TenantServiceServer) GetTenant(ctx context.Context, req *pb.GetTenantRe
 		s.logger.Error("Failed to get tenant", zap.Error(err))
 		return nil, err
 	}
-	
+
 	return &pb.GetTenantResponse{
 		Tenant: s.toProtoTenant(tenant),
 	}, nil
@@ -42,18 +42,18 @@ func (s *TenantServiceServer) GetTenant(ctx context.Context, req *pb.GetTenantRe
 func (s *TenantServiceServer) ListTenants(ctx context.Context, req *pb.ListTenantsRequest) (*pb.ListTenantsResponse, error) {
 	page := int(req.Page)
 	pageSize := int(req.PageSize)
-	
+
 	tenants, total, err := s.tenantService.ListTenants(ctx, page, pageSize)
 	if err != nil {
 		s.logger.Error("Failed to list tenants", zap.Error(err))
 		return nil, err
 	}
-	
+
 	protoTenants := make([]*pb.Tenant, len(tenants))
 	for i, tenant := range tenants {
 		protoTenants[i] = s.toProtoTenant(tenant)
 	}
-	
+
 	return &pb.ListTenantsResponse{
 		Tenants: protoTenants,
 		Total:   int32(total),
@@ -67,13 +67,13 @@ func (s *TenantServiceServer) CreateTenant(ctx context.Context, req *pb.CreateTe
 		Domain:           req.Domain,
 		SubscriptionTier: req.SubscriptionTier,
 	}
-	
+
 	tenant, err := s.tenantService.CreateTenant(ctx, createReq)
 	if err != nil {
 		s.logger.Error("Failed to create tenant", zap.Error(err))
 		return nil, err
 	}
-	
+
 	return &pb.CreateTenantResponse{
 		Tenant: s.toProtoTenant(tenant),
 	}, nil
@@ -86,13 +86,13 @@ func (s *TenantServiceServer) UpdateTenant(ctx context.Context, req *pb.UpdateTe
 		Domain:           req.Domain,
 		SubscriptionTier: req.SubscriptionTier,
 	}
-	
+
 	tenant, err := s.tenantService.UpdateTenant(ctx, req.TenantId, updateReq)
 	if err != nil {
 		s.logger.Error("Failed to update tenant", zap.Error(err))
 		return nil, err
 	}
-	
+
 	return &pb.UpdateTenantResponse{
 		Tenant: s.toProtoTenant(tenant),
 	}, nil
@@ -105,7 +105,7 @@ func (s *TenantServiceServer) DeleteTenant(ctx context.Context, req *pb.DeleteTe
 		s.logger.Error("Failed to delete tenant", zap.Error(err))
 		return nil, err
 	}
-	
+
 	return &pb.DeleteTenantResponse{
 		Success: true,
 	}, nil
@@ -118,7 +118,7 @@ func (s *TenantServiceServer) AddUserToTenant(ctx context.Context, req *pb.AddUs
 		s.logger.Error("Failed to add user to tenant", zap.Error(err))
 		return nil, err
 	}
-	
+
 	return &pb.AddUserToTenantResponse{
 		Success: true,
 	}, nil
@@ -131,7 +131,7 @@ func (s *TenantServiceServer) RemoveUserFromTenant(ctx context.Context, req *pb.
 		s.logger.Error("Failed to remove user from tenant", zap.Error(err))
 		return nil, err
 	}
-	
+
 	return &pb.RemoveUserFromTenantResponse{
 		Success: true,
 	}, nil
