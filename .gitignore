@@ -51,3 +51,11 @@ logs/
 
 # Documentation build
 docs/_build/
+
+# Security reports
+security-report.json
+gosec-report.*
+
+# Performance test results
+*.pprof
+*.prof
