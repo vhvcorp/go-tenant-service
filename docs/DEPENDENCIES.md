@@ -20,7 +20,7 @@ require (
 
 ### Infrastructure
 - **MongoDB**: Tenant data, subscriptions, domains
-  - Collections: `tenants`, `subscriptions`, `domains`
+  - Collections: `tenants`, `tenant_users`
 - **Redis**: Tenant cache
   - Keys: `tenant:*`, `subscription:*`
 
@@ -69,22 +69,25 @@ LOG_LEVEL=info
 {
   "_id": "ObjectId",
   "name": "string (indexed)",
-  "slug": "string (unique, indexed)",
-  "subscription_tier": "string",
-  "status": "string (indexed)",
-  "created_at": "timestamp",
-  "updated_at": "timestamp"
+  "domain": "string (unique, indexed)",
+  "subscriptionTier": "string",
+  "isActive": "boolean",
+  "settings": "object",
+  "createdAt": "timestamp",
+  "updatedAt": "timestamp"
 }
 ```
 
-#### domains
+#### tenant_users
 ```json
 {
   "_id": "ObjectId",
-  "tenant_id": "string (indexed)",
-  "domain": "string (unique, indexed)",
-  "is_verified": "boolean",
-  "created_at": "timestamp"
+  "tenantId": "string (indexed)",
+  "userId": "string (indexed)",
+  "role": "string",
+  "isActive": "boolean",
+  "createdAt": "timestamp",
+  "updatedAt": "timestamp"
 }
 ```
 

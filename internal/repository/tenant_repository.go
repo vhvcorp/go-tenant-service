@@ -125,7 +125,7 @@ func (r *TenantRepository) List(ctx context.Context, page, pageSize int) ([]*dom
 	opts := options.Find().
 		SetSkip(int64(skip)).
 		SetLimit(int64(pageSize)).
-		SetSort(bson.D{{Key: "created_at", Value: -1}})
+		SetSort(bson.D{{Key: "createdAt", Value: -1}})
 
 	cursor, err := r.collection.Find(ctx, bson.M{}, opts)
 	if err != nil {
@@ -168,8 +168,8 @@ func (r *TenantRepository) Delete(ctx context.Context, id string) error {
 		bson.M{"_id": objectID},
 		bson.M{
 			"$set": bson.M{
-				"is_active":  false,
-				"updated_at": time.Now(),
+				"isActive":  false,
+				"updatedAt": time.Now(),
 			},
 		},
 	)

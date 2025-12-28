@@ -28,16 +28,16 @@ func NewTenantUserRepository(db *mongo.Database) *TenantUserRepository {
 	indexes := []mongo.IndexModel{
 		{
 			Keys: bson.D{
-				{Key: "tenant_id", Value: 1},
-				{Key: "user_id", Value: 1},
+				{Key: "tenantId", Value: 1},
+				{Key: "userId", Value: 1},
 			},
 			Options: options.Index().SetUnique(true),
 		},
 		{
-			Keys: bson.D{{Key: "tenant_id", Value: 1}},
+			Keys: bson.D{{Key: "tenantId", Value: 1}},
 		},
 		{
-			Keys: bson.D{{Key: "user_id", Value: 1}},
+			Keys: bson.D{{Key: "userId", Value: 1}},
 		},
 	}
 
@@ -66,13 +66,13 @@ func (r *TenantUserRepository) RemoveUser(ctx context.Context, tenantID, userID 
 	_, err := r.collection.UpdateOne(
 		ctx,
 		bson.M{
-			"tenant_id": tenantID,
-			"user_id":   userID,
+			"tenantId": tenantID,
+			"userId":   userID,
 		},
 		bson.M{
 			"$set": bson.M{
-				"is_active":  false,
-				"updated_at": time.Now(),
+				"isActive":  false,
+				"updatedAt": time.Now(),
 			},
 		},
 	)
@@ -86,9 +86,9 @@ func (r *TenantUserRepository) RemoveUser(ctx context.Context, tenantID, userID 
 func (r *TenantUserRepository) FindByTenantAndUser(ctx context.Context, tenantID, userID string) (*domain.TenantUser, error) {
 	var tenantUser domain.TenantUser
 	err := r.collection.FindOne(ctx, bson.M{
-		"tenant_id": tenantID,
-		"user_id":   userID,
-		"is_active": true,
+		"tenantId": tenantID,
+		"userId":   userID,
+		"isActive": true,
 	}).Decode(&tenantUser)
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
@@ -102,8 +102,8 @@ func (r *TenantUserRepository) FindByTenantAndUser(ctx context.Context, tenantID
 // ListUsersByTenant lists all users in a tenant
 func (r *TenantUserRepository) ListUsersByTenant(ctx context.Context, tenantID string) ([]*domain.TenantUser, error) {
 	cursor, err := r.collection.Find(ctx, bson.M{
-		"tenant_id": tenantID,
-		"is_active": true,
+		"tenantId": tenantID,
+		"isActive": true,
 	})
 	if err != nil {
 		return nil, fmt.Errorf("failed to list tenant users: %w", err)
@@ -121,8 +121,8 @@ func (r *TenantUserRepository) ListUsersByTenant(ctx context.Context, tenantID s
 // ListTenantsByUser lists all tenants for a user
 func (r *TenantUserRepository) ListTenantsByUser(ctx context.Context, userID string) ([]*domain.TenantUser, error) {
 	cursor, err := r.collection.Find(ctx, bson.M{
-		"user_id":   userID,
-		"is_active": true,
+		"userId":   userID,
+		"isActive": true,
 	})
 	if err != nil {
 		return nil, fmt.Errorf("failed to list user tenants: %w", err)
