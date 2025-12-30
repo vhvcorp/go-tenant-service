@@ -19,7 +19,11 @@
 - Redis 6.0+ (if applicable)
 - RabbitMQ 3.9+ (if applicable)
 
+**For Windows users:** See [docs/WINDOWS.md](docs/WINDOWS.md) for detailed Windows development setup.
+
 ## Installation
+
+### Linux / macOS
 
 ```bash
 # Clone the repository
@@ -29,6 +33,19 @@ cd go-tenant-service
 # Install dependencies
 go mod download
 ```
+
+### Windows
+
+```powershell
+# Clone the repository
+git clone https://github.com/vhvplatform/go-tenant-service.git
+cd go-tenant-service
+
+# Install dependencies
+.\build.ps1 deps
+```
+
+See [docs/WINDOWS.md](docs/WINDOWS.md) for comprehensive Windows setup instructions.
 
 ## Configuration
 
@@ -44,6 +61,7 @@ See [DEPENDENCIES.md](docs/DEPENDENCIES.md) for a complete list of environment v
 
 ### Running Locally
 
+**Linux / macOS:**
 ```bash
 # Run the service
 make run
@@ -52,16 +70,34 @@ make run
 go run cmd/main.go
 ```
 
+**Windows:**
+```powershell
+# Run the service
+.\build.ps1 run
+
+# Or with go run
+go run .\cmd\main.go
+```
+
 ### Running with Docker
 
+**Linux / macOS:**
 ```bash
 # Build and run
 make docker-build
 make docker-run
 ```
 
+**Windows:**
+```powershell
+# Build and run
+.\build.ps1 docker-build
+.\build.ps1 docker-run
+```
+
 ### Running Tests
 
+**Linux / macOS:**
 ```bash
 # Run all tests
 make test
@@ -70,14 +106,33 @@ make test
 make test-coverage
 ```
 
+**Windows:**
+```powershell
+# Run all tests
+.\build.ps1 test
+
+# Run with coverage
+.\build.ps1 test-coverage
+```
+
 ### Linting
 
+**Linux / macOS:**
 ```bash
 # Run linters
 make lint
 
 # Format code
 make fmt
+```
+
+**Windows:**
+```powershell
+# Run linters
+.\build.ps1 lint
+
+# Format code
+.\build.ps1 fmt
 ```
 
 ## API Documentation
