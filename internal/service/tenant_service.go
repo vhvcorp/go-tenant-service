@@ -222,3 +222,24 @@ func (s *TenantService) RemoveUserFromTenant(ctx context.Context, tenantID, user
 
 	return nil
 }
+
+// GetTenantUsers retrieves all users in a tenant
+func (s *TenantService) GetTenantUsers(ctx context.Context, tenantID string) ([]*domain.TenantUser, error) {
+	// Check if tenant exists
+	tenant, err := s.tenantRepo.FindByID(ctx, tenantID)
+	if err != nil {
+		s.logger.Error("Failed to find tenant", zap.Error(err))
+		return nil, errors.Internal("Failed to get tenant users")
+	}
+	if tenant == nil {
+		return nil, errors.NotFound("Tenant not found")
+	}
+
+	tenantUsers, err := s.tenantUserRepo.ListUsersByTenant(ctx, tenantID)
+	if err != nil {
+		s.logger.Error("Failed to get tenant users", zap.Error(err))
+		return nil, errors.Internal("Failed to get tenant users")
+	}
+
+	return tenantUsers, nil
+}

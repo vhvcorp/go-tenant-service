@@ -1,0 +1,338 @@
+basePath: /
+definitions:
+  github_com_vhvplatform_go-tenant-service_internal_domain.AddUserRequest:
+    properties:
+      role:
+        type: string
+      user_id:
+        type: string
+    required:
+    - role
+    - user_id
+    type: object
+  github_com_vhvplatform_go-tenant-service_internal_domain.CreateTenantRequest:
+    properties:
+      domain:
+        type: string
+      name:
+        type: string
+      subscription_tier:
+        type: string
+    required:
+    - name
+    type: object
+  github_com_vhvplatform_go-tenant-service_internal_domain.UpdateTenantRequest:
+    properties:
+      domain:
+        type: string
+      name:
+        type: string
+      subscription_tier:
+        type: string
+    type: object
+host: localhost:8083
+info:
+  contact:
+    email: support@vhvplatform.com
+    name: API Support
+    url: http://www.vhvplatform.com/support
+  description: Multi-tenant Management Service
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Tenant Service API
+  version: "1.0"
+paths:
+  /api/v1/tenants:
+    get:
+      consumes:
+      - application/json
+      description: Get paginated list of tenants
+      parameters:
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Page size
+        in: query
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of tenants
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: List all tenants
+      tags:
+      - tenants
+    post:
+      consumes:
+      - application/json
+      description: Create a new tenant in the system
+      parameters:
+      - description: Tenant creation request
+        in: body
+        name: tenant
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_vhvplatform_go-tenant-service_internal_domain.CreateTenantRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Tenant created
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Invalid request
+          schema:
+            additionalProperties: true
+            type: object
+        "409":
+          description: Tenant already exists
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Create a new tenant
+      tags:
+      - tenants
+  /api/v1/tenants/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Soft delete a tenant
+      parameters:
+      - description: Tenant ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Tenant deleted
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Tenant not found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Delete tenant (soft delete)
+      tags:
+      - tenants
+    get:
+      consumes:
+      - application/json
+      description: Get tenant details by ID
+      parameters:
+      - description: Tenant ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Tenant details
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Tenant not found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get tenant by ID
+      tags:
+      - tenants
+    put:
+      consumes:
+      - application/json
+      description: Update tenant information
+      parameters:
+      - description: Tenant ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Tenant update request
+        in: body
+        name: tenant
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_vhvplatform_go-tenant-service_internal_domain.UpdateTenantRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Tenant updated
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Invalid request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Tenant not found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Update tenant
+      tags:
+      - tenants
+  /api/v1/tenants/{id}/users:
+    get:
+      consumes:
+      - application/json
+      description: Get list of users in a tenant
+      parameters:
+      - description: Tenant ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of tenant users
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Tenant not found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get tenant users
+      tags:
+      - tenant-users
+    post:
+      consumes:
+      - application/json
+      description: Add a user to a tenant with specific role
+      parameters:
+      - description: Tenant ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: User addition request
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_vhvplatform_go-tenant-service_internal_domain.AddUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User added to tenant
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Invalid request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Tenant not found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Add user to tenant
+      tags:
+      - tenant-users
+  /api/v1/tenants/{id}/users/{user_id}:
+    delete:
+      consumes:
+      - application/json
+      description: Remove a user from a tenant
+      parameters:
+      - description: Tenant ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: User ID
+        in: path
+        name: user_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User removed from tenant
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: User or tenant not found
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Remove user from tenant
+      tags:
+      - tenant-users
+schemes:
+- http
+- https
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

@@ -11,9 +11,12 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 	"github.com/vhvplatform/go-shared/config"
 	"github.com/vhvplatform/go-shared/logger"
 	"github.com/vhvplatform/go-shared/mongodb"
+	_ "github.com/vhvplatform/go-tenant-service/docs"
 	"github.com/vhvplatform/go-tenant-service/internal/grpc"
 	"github.com/vhvplatform/go-tenant-service/internal/handler"
 	"github.com/vhvplatform/go-tenant-service/internal/repository"
@@ -24,6 +27,26 @@ import (
 	"google.golang.org/grpc/health"
 	healthpb "google.golang.org/grpc/health/grpc_health_v1"
 )
+
+// @title Tenant Service API
+// @version 1.0
+// @description Multi-tenant Management Service
+// @termsOfService http://swagger.io/terms/
+
+// @contact.name API Support
+// @contact.url http://www.vhvplatform.com/support
+// @contact.email support@vhvplatform.com
+
+// @license.name Apache 2.0
+// @license.url http://www.apache.org/licenses/LICENSE-2.0.html
+
+// @host localhost:8083
+// @BasePath /
+// @schemes http https
+
+// @securityDefinitions.apikey BearerAuth
+// @in header
+// @name Authorization
 
 func main() {
 	// Load configuration
@@ -124,9 +147,13 @@ func startHTTPServer(tenantService *service.TenantService, log *logger.Logger, p
 			tenants.PUT("/:id", tenantHandler.UpdateTenant)
 			tenants.DELETE("/:id", tenantHandler.DeleteTenant)
 			tenants.POST("/:id/users", tenantHandler.AddUserToTenant)
+			tenants.GET("/:id/users", tenantHandler.GetTenantUsers)
 			tenants.DELETE("/:id/users/:user_id", tenantHandler.RemoveUserFromTenant)
 		}
 	}
+
+	// Swagger endpoint
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	srv := &http.Server{
 		Addr:    fmt.Sprintf(":%s", port),

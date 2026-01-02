@@ -137,7 +137,29 @@ make fmt
 
 ## API Documentation
 
-See [docs/API.md](docs/API.md) for API documentation.
+Interactive API documentation is available via Swagger UI:
+
+**Swagger UI:** http://localhost:8083/swagger/index.html
+
+For detailed API documentation, see [docs/API.md](docs/API.md).
+
+### Generating Swagger Documentation
+
+After making changes to API endpoints or annotations, regenerate the Swagger documentation:
+
+**Linux / macOS:**
+```bash
+make swagger
+```
+
+**Windows:**
+```powershell
+# Install swag if not already installed
+go install github.com/swaggo/swag/cmd/swag@latest
+
+# Generate documentation
+swag init -g cmd/main.go -o docs --parseDependency --parseInternal
+```
 
 ## Deployment
 
