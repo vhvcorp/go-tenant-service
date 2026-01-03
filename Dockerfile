@@ -27,7 +27,7 @@ RUN apk --no-cache add ca-certificates tzdata
 RUN addgroup -S appgroup && adduser -S appuser -u 1000 -G appgroup
 WORKDIR /app
 RUN chown 1000:1000 /app
-COPY --from=builder --chown=1000:1000 /app/bin/user-service .
+COPY --from=builder --chown=1000:1000 /app/bin/tenant-service .
 USER 1000
 EXPOSE 50053 8083
 CMD ["./tenant-service"]
