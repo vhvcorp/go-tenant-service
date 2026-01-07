@@ -1,155 +1,83 @@
 # go-tenant-service
 
-> Part of the SaaS Framework - Extracted from monorepo
+> Part of the SaaS Framework - Tenant Management Service
 
 ## Description
 
-[Add service description here]
+This repository contains the tenant management service with multiple components:
 
-## Features
+- **server/** - Golang backend microservice
+- **client/** - ReactJS frontend microservice
+- **flutter/** - Flutter mobile application
+- **docs/** - Project documentation
 
-- Feature 1
-- Feature 2
-- Feature 3
+## Getting Started
+
+### Server (Golang Backend)
+
+See [server/README.md](server/README.md) for detailed instructions on setting up and running the backend service.
+
+### Client (ReactJS Frontend)
+
+See [client/README.md](client/README.md) for detailed instructions on setting up and running the frontend application.
+
+### Flutter (Mobile App)
+
+See [flutter/README.md](flutter/README.md) for detailed instructions on setting up and running the mobile application.
+
+## Documentation
+
+Complete project documentation is available in the [docs/](docs/) directory:
+
+- [CHANGELOG.md](docs/CHANGELOG.md) - Version history and changes
+- [CONTRIBUTING.md](docs/CONTRIBUTING.md) - Contribution guidelines
+- [DEPENDENCIES.md](docs/DEPENDENCIES.md) - Dependencies and environment variables
+- [WINDOWS.md](docs/WINDOWS.md) - Windows development setup
+- [WINDOWS_COMPATIBILITY_SUMMARY.md](docs/WINDOWS_COMPATIBILITY_SUMMARY.md) - Windows compatibility notes
+
+## Repository Structure
+
+```
+.
+├── client/          # ReactJS frontend microservice
+├── server/          # Golang backend microservice
+├── flutter/         # Flutter mobile application
+├── docs/            # Project documentation
+└── README.md        # This file
+```
 
 ## Prerequisites
 
-- Go 1.25.5+
-- MongoDB 4.4+ (if applicable)
-- Redis 6.0+ (if applicable)
-- RabbitMQ 3.9+ (if applicable)
+- For backend: Go 1.25.5+, MongoDB 4.4+, Redis 6.0+, RabbitMQ 3.9+
+- For frontend: Node.js 16+, npm/yarn
+- For mobile: Flutter 3.0+, Android SDK, Xcode (for iOS)
 
-**For Windows users:** See [docs/WINDOWS.md](docs/WINDOWS.md) for detailed Windows development setup.
-
-## Installation
-
-### Linux / macOS
+## Quick Start
 
 ```bash
 # Clone the repository
 git clone https://github.com/vhvplatform/go-tenant-service.git
 cd go-tenant-service
 
-# Install dependencies
+# Setup backend
+cd server
 go mod download
-```
-
-### Windows
-
-```powershell
-# Clone the repository
-git clone https://github.com/vhvplatform/go-tenant-service.git
-cd go-tenant-service
-
-# Install dependencies
-.\build.ps1 deps
-```
-
-See [docs/WINDOWS.md](docs/WINDOWS.md) for comprehensive Windows setup instructions.
-
-## Configuration
-
-Copy the example environment file and update with your values:
-
-```bash
-cp .env.example .env
-```
-
-See [DEPENDENCIES.md](docs/DEPENDENCIES.md) for a complete list of environment variables.
-
-## Development
-
-### Running Locally
-
-**Linux / macOS:**
-```bash
-# Run the service
 make run
 
-# Or with go run
-go run cmd/main.go
+# Setup frontend (in another terminal)
+cd client
+npm install
+npm start
+
+# Setup mobile app
+cd flutter
+flutter pub get
+flutter run
 ```
-
-**Windows:**
-```powershell
-# Run the service
-.\build.ps1 run
-
-# Or with go run
-go run .\cmd\main.go
-```
-
-### Running with Docker
-
-**Linux / macOS:**
-```bash
-# Build and run
-make docker-build
-make docker-run
-```
-
-**Windows:**
-```powershell
-# Build and run
-.\build.ps1 docker-build
-.\build.ps1 docker-run
-```
-
-### Running Tests
-
-**Linux / macOS:**
-```bash
-# Run all tests
-make test
-
-# Run with coverage
-make test-coverage
-```
-
-**Windows:**
-```powershell
-# Run all tests
-.\build.ps1 test
-
-# Run with coverage
-.\build.ps1 test-coverage
-```
-
-### Linting
-
-**Linux / macOS:**
-```bash
-# Run linters
-make lint
-
-# Format code
-make fmt
-```
-
-**Windows:**
-```powershell
-# Run linters
-.\build.ps1 lint
-
-# Format code
-.\build.ps1 fmt
-```
-
-## API Documentation
-
-See [docs/API.md](docs/API.md) for API documentation.
-
-## Deployment
-
-See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) for deployment instructions.
-
-## Architecture
-
-See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for architecture details.
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines.
+See [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) for contribution guidelines.
 
 ## Related Repositories
 
