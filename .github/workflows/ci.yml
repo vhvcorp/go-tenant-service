@@ -48,10 +48,14 @@ jobs:
             ${{ runner.os }}-go-
 
       - name: Download dependencies
-        run: go mod download
+        run: |
+          cd server
+          go mod download
 
       - name: Run unit tests
-        run: go test -v -race -coverprofile=coverage.txt -covermode=atomic ./...
+        run: |
+          cd server
+          go test -v -race -coverprofile=coverage.txt -covermode=atomic ./...
         env:
           MONGODB_URI: mongodb://localhost:27017
           REDIS_URL: redis://localhost:6379
@@ -59,6 +63,7 @@ jobs:
 
       - name: Check coverage
         run: |
+          cd server
           coverage=$(go tool cover -func=coverage.txt | grep total | awk '{print $3}' | sed 's/%//')
           echo "Coverage: $coverage%"
           if (( $(echo "$coverage < 80" | bc -l) )); then
@@ -69,7 +74,7 @@ jobs:
       - name: Upload coverage
         uses: codecov/codecov-action@v5
         with:
-          file: ./coverage.txt
+          file: ./server/coverage.txt
 
   lint:
     name: Lint
@@ -88,6 +93,7 @@ jobs:
         with:
           version: latest
           args: --timeout=5m
+          working-directory: server
 
   security:
     name: Security
@@ -99,7 +105,7 @@ jobs:
       - name: Run gosec
         uses: securego/gosec@master
         with:
-          args: ./...
+          args: ./server/...
 
       - name: Run Snyk
         uses: snyk/actions/golang@master
@@ -107,6 +113,7 @@ jobs:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
           command: test
+          args: --file=server/go.mod
         continue-on-error: true
 
   build:
@@ -123,7 +130,7 @@ jobs:
       - name: Build Docker image
         uses: docker/build-push-action@v6
         with:
-          context: .
+          context: ./server
           push: false
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:pr-${{ github.event.pull_request.number }}
           cache-from: type=gha
