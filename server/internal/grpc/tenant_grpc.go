@@ -1,14 +1,19 @@
 package grpc
 
 import (
+	"context"
+	"time"
+
 	"github.com/vhvplatform/go-shared/logger"
+	"github.com/vhvplatform/go-tenant-service/internal/domain"
 	"github.com/vhvplatform/go-tenant-service/internal/service"
-	// pb "github.com/vhvplatform/go-tenant-service/proto"
+	pb "github.com/vhvplatform/go-tenant-service/proto"
+	"go.uber.org/zap"
 )
 
 // TenantServiceServer implements the gRPC tenant service
 type TenantServiceServer struct {
-	// pb.UnimplementedTenantServiceServer
+	pb.UnimplementedTenantServiceServer
 	tenantService *service.TenantService
 	logger        *logger.Logger
 }
@@ -21,10 +26,6 @@ func NewTenantServiceServer(tenantService *service.TenantService, log *logger.Lo
 	}
 }
 
-// Note: gRPC methods are commented out until protobuf code is generated
-// Run `make proto` to generate the protobuf code, then uncomment the methods below
-
-/*
 // GetTenant retrieves a tenant by ID
 func (s *TenantServiceServer) GetTenant(ctx context.Context, req *pb.GetTenantRequest) (*pb.GetTenantResponse, error) {
 	tenant, err := s.tenantService.GetTenant(ctx, req.TenantId)
@@ -148,4 +149,3 @@ func (s *TenantServiceServer) toProtoTenant(tenant *domain.Tenant) *pb.Tenant {
 		UpdatedAt:        tenant.UpdatedAt.Format(time.RFC3339),
 	}
 }
-*/

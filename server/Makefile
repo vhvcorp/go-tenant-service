@@ -9,9 +9,10 @@ GO_VERSION := 1.25.5
 help: ## Display this help screen
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
-build: ## Build the service
-	@echo "Building $(SERVICE_NAME)..."
-	@go build -o bin/$(SERVICE_NAME) ./cmd/main.go
+build: ## Build all services
+	@echo "Building services..."
+	@go build -o bin/tenant-service ./cmd/tenant/main.go
+	@go build -o bin/api-gateway ./cmd/gateway/main.go
 	@echo "Build complete!"
 
 test: ## Run tests
@@ -43,20 +44,27 @@ clean: ## Clean build artifacts
 	@go clean -testcache
 	@echo "Clean complete!"
 
-run: ## Run the service locally
-	@echo "Running $(SERVICE_NAME)..."
-	@go run ./cmd/main.go
+run-tenant: ## Run the tenant service locally
+	@echo "Running tenant-service..."
+	@go run ./cmd/tenant/main.go
+
+run-gateway: ## Run the api-gateway service locally
+	@echo "Running api-gateway..."
+	@go run ./cmd/gateway/main.go
 
 deps: ## Download dependencies
 	@echo "Downloading dependencies..."
 	@go mod download
 	@go mod tidy
 
-proto: ## Generate protobuf files (if applicable)
+proto: ## Generate protobuf files
 	@if [ -d "proto" ]; then \
 		echo "Generating protobuf files..."; \
-		protoc --go_out=. --go_opt=paths=source_relative \
+		protoc -I. -Iproto \
+			--go_out=. --go_opt=paths=source_relative \
 			--go-grpc_out=. --go-grpc_opt=paths=source_relative \
+			--grpc-gateway_out=. --grpc-gateway_opt=paths=source_relative \
+			--openapiv2_out=docs --openapiv2_opt=logtostderr=true \
 			proto/*.proto; \
 	fi
 
@@ -84,6 +92,8 @@ install-tools: ## Install development tools
 	@if [ -d "proto" ]; then \
 		go install google.golang.org/protobuf/cmd/protoc-gen-go@latest; \
 		go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest; \
+		go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway@latest; \
+		go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2@latest; \
 	fi
 	@echo "Tools installed!"
 

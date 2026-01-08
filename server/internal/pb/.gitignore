@@ -1,0 +1,3 @@
+# Ignore generated proto files but keep the README
+*.pb.go
+!README.md

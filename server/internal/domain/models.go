@@ -13,9 +13,29 @@ type Tenant struct {
 	Domain           string                 `bson:"domain,omitempty" json:"domain,omitempty"`
 	SubscriptionTier string                 `bson:"subscriptionTier" json:"subscription_tier"`
 	IsActive         bool                   `bson:"isActive" json:"is_active"`
+	AuthSettings     AuthSettings           `bson:"authSettings" json:"auth_settings"`
+	DefaultService   string                 `bson:"defaultService" json:"default_service"`
 	Settings         map[string]interface{} `bson:"settings,omitempty" json:"settings,omitempty"`
 	CreatedAt        time.Time              `bson:"createdAt" json:"created_at"`
 	UpdatedAt        time.Time              `bson:"updatedAt" json:"updated_at"`
+}
+
+// AuthSettings defines authentication configuration for a tenant
+type AuthSettings struct {
+	AllowedLoginMethods []string `bson:"allowedLoginMethods" json:"allowed_login_methods"`
+}
+
+// User represents a global user account
+type User struct {
+	ID             primitive.ObjectID `bson:"_id,omitempty" json:"id"`
+	Username       string             `bson:"username,omitempty" json:"username,omitempty"`
+	Email          string             `bson:"email,omitempty" json:"email,omitempty"`
+	Phone          string             `bson:"phone,omitempty" json:"phone,omitempty"`
+	DocumentNumber string             `bson:"documentNumber,omitempty" json:"document_number,omitempty"`
+	PasswordHash   string             `bson:"passwordHash" json:"-"`
+	IsActive       bool               `bson:"isActive" json:"is_active"`
+	CreatedAt      time.Time          `bson:"createdAt" json:"created_at"`
+	UpdatedAt      time.Time          `bson:"updatedAt" json:"updated_at"`
 }
 
 // TenantUser represents a user's relationship with a tenant

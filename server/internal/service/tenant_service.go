@@ -59,6 +59,7 @@ func (s *TenantService) CreateTenant(ctx context.Context, req *domain.CreateTena
 		Name:             req.Name,
 		Domain:           req.Domain,
 		SubscriptionTier: req.SubscriptionTier,
+		AuthSettings:     domain.AuthSettings{AllowedLoginMethods: []string{"email"}}, // Default
 	}
 
 	if err := s.tenantRepo.Create(ctx, tenant); err != nil {
@@ -118,6 +119,12 @@ func (s *TenantService) UpdateTenant(ctx context.Context, id string, req *domain
 	}
 	if req.SubscriptionTier != "" {
 		tenant.SubscriptionTier = req.SubscriptionTier
+	}
+
+	// Update new fields if provided in meta or settings
+	// For this task, we'll assume they can be passed in settings or a specialized request
+	if ds, ok := tenant.Settings["default_service"].(string); ok {
+		tenant.DefaultService = ds
 	}
 
 	if err := s.tenantRepo.Update(ctx, tenant); err != nil {
