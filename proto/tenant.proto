@@ -65,6 +65,38 @@ service TenantService {
       get: "/api/v1/tenants/{tenant_id}/default-service"
     };
   }
+
+  // Service Registry RPCs
+  rpc GetServiceConfig(GetServiceConfigRequest) returns (GetServiceConfigResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/tenants/{tenant_id}/services/{service_name}/config"
+    };
+  }
+
+  rpc UpdateServiceConfig(UpdateServiceConfigRequest) returns (UpdateServiceConfigResponse) {
+    option (google.api.http) = {
+      put: "/api/v1/tenants/{tenant_id}/services/{service_name}/config"
+      body: "*"
+    };
+  }
+
+  rpc GetServiceURL(GetServiceURLRequest) returns (GetServiceURLResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/tenants/{tenant_id}/services/{service_name}/url"
+    };
+  }
+
+  rpc ListTenantServices(ListTenantServicesRequest) returns (ListTenantServicesResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/tenants/{tenant_id}/services"
+    };
+  }
+
+  rpc GetServiceHealth(GetServiceHealthRequest) returns (GetServiceHealthResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/tenants/{tenant_id}/services/{service_name}/health"
+    };
+  }
 }
 
 message GetTenantRequest {
@@ -180,4 +212,97 @@ message GetDefaultServiceRequest {
 message GetDefaultServiceResponse {
   string default_service_url = 1;
   repeated string fallback_urls = 2;
+}
+
+// Service Registry Messages
+message GetServiceConfigRequest {
+  string tenant_id = 1;
+  string service_name = 2;
+}
+
+message GetServiceConfigResponse {
+  ServiceConfig config = 1;
+}
+
+message UpdateServiceConfigRequest {
+  string tenant_id = 1;
+  string service_name = 2;
+  ServiceConfig config = 3;
+}
+
+message UpdateServiceConfigResponse {
+  ServiceConfig config = 1;
+}
+
+message GetServiceURLRequest {
+  string tenant_id = 1;
+  string service_name = 2;
+}
+
+message GetServiceURLResponse {
+  string url = 1;
+  bool is_default = 2;
+  bool success = 3;
+  string error = 4;
+  repeated string attempted_urls = 5;
+}
+
+message ListTenantServicesRequest {
+  string tenant_id = 1;
+}
+
+message ListTenantServicesResponse {
+  repeated ServiceConfig services = 1;
+}
+
+message GetServiceHealthRequest {
+  string tenant_id = 1;
+  string service_name = 2;
+}
+
+message GetServiceHealthResponse {
+  repeated ServiceHealth healths = 1;
+}
+
+message ServiceConfig {
+  string id = 1;
+  string tenant_id = 2;
+  string service_name = 3;
+  ServiceEndpoint primary_endpoint = 4;
+  repeated ServiceEndpoint fallback_chain = 5;
+  string default_service_url = 6;
+  HealthCheckConfig health_check = 7;
+  string load_balance_strategy = 8;
+  bool is_active = 9;
+  map<string, string> metadata = 10;
+  string created_at = 11;
+  string updated_at = 12;
+}
+
+message ServiceEndpoint {
+  string url = 1;
+  int32 priority = 2;
+  int32 weight = 3;
+  int32 timeout = 4;
+  map<string, string> headers = 5;
+  bool is_active = 6;
+}
+
+message HealthCheckConfig {
+  bool enabled = 1;
+  string path = 2;
+  string method = 3;
+  int32 interval = 4;
+  int32 timeout = 5;
+  int32 fail_threshold = 6;
+}
+
+message ServiceHealth {
+  string endpoint_url = 1;
+  bool is_healthy = 2;
+  string last_checked = 3;
+  string last_successful = 4;
+  string last_failure = 5;
+  int32 consecutive_fails = 6;
+  string last_error = 7;
 }
